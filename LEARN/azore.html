@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Island - Explore the Azores</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+        }
+
+    
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: white;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+        .menu-toggle {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            transform: scale(1.1);
+            color: #2c3e50;
+        }
+
+        
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #eee;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu .nav-links {
+            flex-direction: column;
+            gap: 15px;
+            position: static;
+            transform: none;
+        }
+
+       
+        .hero {
+            position: relative;
+            height: 500px;
+            background-image:url('GREEN FIELD.png') ;
+            //background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1580500550469-4e3b5b3c3a40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 40px;
+            margin: 0 20px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            color: white;
+            max-width: 600px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #333;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            background: #f8f9fa;
+        }
+
+    
+        .hero-nav {
+            position: absolute;
+            bottom: 30px;
+            left: 40px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-arrow {
+            width: 50px;
+            height: 35px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.15);
+        }
+
+        .nav-arrow.active {
+            background: white;
+            color: #333;
+        }
+
+        
+        .values {
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .values h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .values-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 60px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .value-item {
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .value-item:nth-child(1) { animation-delay: 0.2s; }
+        .value-item:nth-child(2) { animation-delay: 0.4s; }
+        .value-item:nth-child(3) { animation-delay: 0.6s; }
+        .value-item:nth-child(4) { animation-delay: 0.8s; }
+
+        .value-item:hover {
+            transform: translateY(-8px);
+        }
+
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            background: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .value-item:hover .value-icon {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .value-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .value-item p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+    
+        .tours {
+            padding: 0 40px 80px;
+        }
+
+        .tours h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .tours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tour-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .tour-card:nth-child(1) { animation-delay: 0.2s; }
+        .tour-card:nth-child(2) { animation-delay: 0.4s; }
+        .tour-card:nth-child(3) { animation-delay: 0.6s; }
+        .tour-card:nth-child(4) { animation-delay: 0.8s; }
+
+        .tour-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        .tour-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .tour-rating {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            margin-left: 22rem;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tour-rating .stars {
+            color: #ffd700;
+        }
+
+        .tour-info {
+            padding: 20px;
+        }
+
+        .tour-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .tour-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .tour-duration {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .tour-arrow {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 25px;
+            background: #2c3e50;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .tour-arrow:hover {
+            background: #34495e;
+            transform: scale(1.15);
+        }
+
+        .see-all-btn {
+            width: 30%;
+            display: block;
+            margin: 0 auto;
+            background: transparent;
+            border: 2px solid #2c3e50;
+            text-align: center;
+            color: #2c3e50;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .see-all-btn:hover {
+            background: #2c3e50;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(44, 62, 80, 0.3);
+        }
+
+    
+        .footer {
+            background: #2c3e50;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            margin-top: 80px;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        
+        .menu-checkbox {
+            display: none;
+        }
+
+        .menu-checkbox:checked + .menu-toggle + .mobile-menu {
+            display: block;
+        }
+
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero, .values, .tours {
+                padding: 40px 20px;
+            }
+            
+            .values-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .tours-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mobile-menu {
+                display: block;
+                position: static;
+                box-shadow: none;
+                border-top: none;
+                padding: 0;
+                margin-top: 20px;
+            }
+
+            .mobile-menu .nav-links {
+                display: flex;
+            }
+        }
+
+    
+        .btn-primary:focus,
+        .see-all-btn:focus,
+        .tour-arrow:focus,
+        .nav-arrow:focus,
+        .nav-links a:focus {
+            outline: 2px solid #2c3e50;
+            outline-offset: 2px;
+        }
+
+        
+        .btn-primary:active,
+        .see-all-btn:active,
+        .tour-arrow:active {
+            transform: scale(0.95);
+        }
+        .tour{
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       
+        <nav>
+            <div class="logo">Island</div>
+            <ul class="nav-links">
+                <li><a href="#tours">Our tours</a></li>
+                <li><a href="#about">About us</a></li>
+                <li><a href="#booking">Booking</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+            <label for="menu-toggle" class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </label>
+            <div class="mobile-menu">
+                <ul class="nav-links">
+                    <li><a href="#tours">Our tours</a></li>
+                    <li><a href="#about">About us</a></li>
+                    <li><a href="#booking">Booking</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+                <div class="hamburger"><i class="fa-solid fa-bars"></i></div>            </div>
+        </nav>
+
+       
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Explore the sights of the Azores</h1>
+                <p>A place where nature and adventure unite</p>
+                <a href="#booking" class="btn-primary">Book now</a>
+            </div>
+            <div class="hero-nav">
+                <a href="#" class="nav-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <a href="#" class="nav-arrow active">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </section>
+
+        
+        <section class="values fade-in" id="about">
+            <h2>Top values for you</h2>
+            <p class="values-subtitle">Try variety of benefits when using our services</p>
+            
+            <div class="values-grid">
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-plane-departure"></i>
+                    </div>
+                    <h3>Airport pickup</h3>
+                    <p>We provide convenient airport pickup service to make your journey smooth from the moment you land.</p>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3>Easy booking</h3>
+                    <p>Quick and easy booking process for all our tours with instant confirmation and flexible options.</p>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Best worldwide</h3>
+                    <p>Our top-rated guide services provide you with the best tour experiences around the world.</p>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3>Lots of promos</h3>
+                    <p>Various promotional offers and discounts available throughout the year for our valued customers.</p>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="tours fade-in" id="tours">
+            <h2>Choose your tour</h2>
+            
+            <div class="tours-grid">
+                <div class="tour-card">
+                    <div class="tour-image" style="background-image: url('alone.png');">
+                        <div class="tour-rating">
+                            5.0 <span class="stars">★</span>
+                        </div>
+                    </div>
+                    <div class="tour-info">
+                        <h3 class="tour-title">Alone with nature</h3>
+                        <div class="tour-price">$100 <span class="tour-duration">/person</span></div>
+                    </div>
+                    <a href="#booking" class="tour-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="tour-card">
+                    <div class="tour-image" style="background-image: url('jeeeep.jpg');">
+                        <div class="tour-rating">
+                            4.8 <span class="stars">★</span>
+                        </div>
+                    </div>
+                    <div class="tour-info">
+                        <h3 class="tour-title">Jeep ride</h3>
+                        <div class="tour-price">$200 <span class="tour-duration">/person</span></div>
+                    </div>
+                    <a href="#booking" class="tour-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="tour-card">
+                    <div class="tour-image" style="background-image: url('asian bridge.png');">
+                        <div class="tour-rating">
+                            5.0 <span class="stars">★</span>
+                        </div>
+                    </div>
+                    <div class="tour-info">
+                        <h3 class="tour-title">Hiking tour</h3>
+                        <div class="tour-price">$150 <span class="tour-duration">/person</span></div>
+                    </div>
+                    <a href="#booking" class="tour-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="tour-card">
+                    <div class="tour-image" style="background-image: url('grass lake.jpg');">
+                        <div class="tour-rating">
+                            4.5 <span class="stars">★</span>
+                        </div>
+                    </div>
+                    <div class="tour-info">
+                        <h3 class="tour-title">Corners of the island</h3>
+                        <div class="tour-price">$220 <span class="tour-duration">/person</span></div>
+                    </div>
+                    <a href="#booking" class="tour-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <a href="#booking" class="see-all-btn">See all</a>
+        </section>
+
+        
+        <footer class="footer" id="booking">
+            <div class="footer-logo">
+                
+            </div>
+            <p class="footer-text">visit Dominion Art</p>
+            ttyyt
+        </footer>
+    </div>
+    <div class="tour"></div>
+</body>
+</html>
